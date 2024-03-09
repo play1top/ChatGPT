@@ -161,7 +161,7 @@ export function SideBar(props: { className?: string }) {
           免费无限制，自由使用！.
         </div>
  	<a href="https://chinagpt.p1ay.top/" className={styles["sidebar-sub-title"]}>
-          免费无限制，自由使用！
+          点击访问我们的导航站
 	</a>
         <div className={styles["sidebar-logo"] + " no-dark"}>
           <ChatGptIcon />
