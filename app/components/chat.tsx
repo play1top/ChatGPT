@@ -1544,6 +1544,8 @@ function _Chat() {
     </div>
   );
 }
+import React, { useEffect } from 'react';
+
 const AddTurnstile: React.FC = () => {
   useEffect(() => {
     // 创建并添加脚本
@@ -1559,19 +1561,11 @@ const AddTurnstile: React.FC = () => {
     div.dataset.sitekey = '0x4AAAAAAAeSlvbblzR86Cud';
     document.body.appendChild(div);
 
-    // 清理函数，组件卸载时移除脚本和 div 元素
-    return () => {
-      document.body.removeChild(script);
-      document.body.removeChild(div);
-    };
+    // 没有清理函数，不卸载元素
   }, []);
 
   return null; // 不渲染任何内容
 };
 
 export default AddTurnstile;
-export function Chat() {
-  const chatStore = useChatStore();
-  const sessionIndex = chatStore.currentSessionIndex;
-  return <_Chat key={sessionIndex}></_Chat>;
-}
+
