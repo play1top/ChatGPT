@@ -1255,7 +1255,7 @@ function _Chat() {
           setShowModal={setShowPromptModal}
         />
       </div>
-
+<AddTurnstile />
       <div
         className={styles["chat-body"]}
         ref={scrollRef}
@@ -1544,16 +1544,6 @@ function _Chat() {
     </div>
   );
 }
-
-export function Chat() {
-  const chatStore = useChatStore();
-  const sessionIndex = chatStore.currentSessionIndex;
-  return <_Chat key={sessionIndex}></_Chat>;
-}
-import React from 'react';
-import AddTurnstile from './AddTurnstile';
-import React, { useEffect } from 'react';
-
 const AddTurnstile: React.FC = () => {
   useEffect(() => {
     // 创建并添加脚本
@@ -1580,15 +1570,8 @@ const AddTurnstile: React.FC = () => {
 };
 
 export default AddTurnstile;
-
-const App: React.FC = () => {
-  return (
-    <div>
-      <h1>My Application</h1>
-      <AddTurnstile />
-    </div>
-  );
-};
-
-export default App;
-
+export function Chat() {
+  const chatStore = useChatStore();
+  const sessionIndex = chatStore.currentSessionIndex;
+  return <_Chat key={sessionIndex}></_Chat>;
+}
