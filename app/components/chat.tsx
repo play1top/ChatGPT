@@ -1550,5 +1550,26 @@ export function Chat() {
   const sessionIndex = chatStore.currentSessionIndex;
   return <_Chat key={sessionIndex}></_Chat>;
 }
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-<div class="cf-turnstile" data-sitekey="0x4AAAAAAAeSlvbblzR86Cud"></div>
+const TurnstileComponent: React.FC = () => {
+  useEffect(() => {
+    // 动态加载外部脚本
+    const script = document.createElement('script');
+    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+
+    // 清理函数，组件卸载时移除脚本
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  return (
+    <div>
+      <div className="cf-turnstile" data-sitekey="0x4AAAAAAAeSlvbblzR86Cud"></div>
+    </div>
+  );
+};
+
+export default TurnstileComponent;
