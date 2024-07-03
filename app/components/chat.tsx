@@ -1550,26 +1550,45 @@ export function Chat() {
   const sessionIndex = chatStore.currentSessionIndex;
   return <_Chat key={sessionIndex}></_Chat>;
 }
-const TurnstileComponent: React.FC = () => {
+import React from 'react';
+import AddTurnstile from './AddTurnstile';
+import React, { useEffect } from 'react';
+
+const AddTurnstile: React.FC = () => {
   useEffect(() => {
-    // 动态加载外部脚本
+    // 创建并添加脚本
     const script = document.createElement('script');
     script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
     script.async = true;
     script.defer = true;
     document.body.appendChild(script);
 
-    // 清理函数，组件卸载时移除脚本
+    // 创建并添加 div 元素
+    const div = document.createElement('div');
+    div.className = 'cf-turnstile';
+    div.dataset.sitekey = '0x4AAAAAAAeSlvbblzR86Cud';
+    document.body.appendChild(div);
+
+    // 清理函数，组件卸载时移除脚本和 div 元素
     return () => {
       document.body.removeChild(script);
+      document.body.removeChild(div);
     };
   }, []);
 
+  return null; // 不渲染任何内容
+};
+
+export default AddTurnstile;
+
+const App: React.FC = () => {
   return (
     <div>
-      <div className="cf-turnstile" data-sitekey="0x4AAAAAAAeSlvbblzR86Cud"></div>
+      <h1>My Application</h1>
+      <AddTurnstile />
     </div>
   );
 };
 
-export default TurnstileComponent;
+export default App;
+
