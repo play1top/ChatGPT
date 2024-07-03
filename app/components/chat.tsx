@@ -1545,26 +1545,23 @@ function _Chat() {
   );
 }
 
-
 const AddTurnstile: React.FC = () => {
   useEffect(() => {
-    // 创建并添加脚本
+    // 动态加载外部脚本
     const script = document.createElement('script');
     script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
     script.async = true;
     script.defer = true;
     document.body.appendChild(script);
 
-    // 创建并添加 div 元素
-    const div = document.createElement('div');
-    div.className = 'cf-turnstile';
-    div.dataset.sitekey = '0x4AAAAAAAeSlvbblzR86Cud';
-    document.body.appendChild(div);
-
-    // 没有清理函数，不卸载元素
+    // 这个示例不包括脚本卸载
   }, []);
 
-  return null; // 不渲染任何内容
+  return (
+    <div style={{ display: 'none' }}>
+      <div className="cf-turnstile" data-sitekey="0x4AAAAAAAeSlvbblzR86Cud"></div>
+    </div>
+  );
 };
 
 export default AddTurnstile;
