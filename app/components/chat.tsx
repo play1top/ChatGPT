@@ -1544,7 +1544,6 @@ function _Chat() {
     </div>
   );
 }
-
 const AddTurnstile: React.FC = () => {
   useEffect(() => {
     // 创建并添加脚本
@@ -1570,4 +1569,8 @@ const AddTurnstile: React.FC = () => {
 };
 
 export default AddTurnstile;
-
+export function Chat() {
+  const chatStore = useChatStore();
+  const sessionIndex = chatStore.currentSessionIndex;
+  return <_Chat key={sessionIndex}></_Chat>;
+}   
