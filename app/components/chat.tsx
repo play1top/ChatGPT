@@ -1548,16 +1548,6 @@ function _Chat() {
 
 const AddTurnstile: React.FC = () => {
   useEffect(() => {
-    // 检查是否已经加载了 Turnstile 脚本
-    if (!document.querySelector('script[src="https://challenges.cloudflare.com/turnstile/v0/api.js"]')) {
-      // 创建并添加脚本
-      const script = document.createElement('script');
-      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
-      script.async = true;
-      script.defer = true;
-      document.body.appendChild(script);
-    }
-
     // 创建并添加遮罩层
     const overlay = document.createElement('div');
     overlay.id = 'turnstile-overlay';
@@ -1599,26 +1589,53 @@ const AddTurnstile: React.FC = () => {
     loadingText.style.color = '#333';
     overlay.appendChild(loadingText);
 
-    // 创建并添加 Turnstile div 元素
-    const turnstileDiv = document.createElement('div');
-    turnstileDiv.className = 'cf-turnstile';
-    turnstileDiv.dataset.sitekey = '0x4AAAAAAAeSlvbblzR86Cud';
-    turnstileDiv.dataset.callback = 'onTurnstileSuccess';
-    overlay.appendChild(turnstileDiv);
-
     document.body.appendChild(overlay);
 
-    // Turnstile 成功回调函数
-    (window as any).onTurnstileSuccess = () => {
-      document.body.removeChild(overlay);
-      document.body.removeChild(turnstileDiv);
+    // 检查 /api/openai/v1/chat/completions 接口状态
+    fetch('/api/openai/v1/chat/completions')
+      .then((response) => {
+        if (response.status === 403) {
+          // 如果返回403状态码，加载Turnstile
+          loadTurnstile(overlay);
+        } else {
+          // 否则移除遮罩层
+          document.body.removeChild(overlay);
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching /api/openai/v1/chat/completions:', error);
+        // 如果发生错误，移除遮罩层
+        document.body.removeChild(overlay);
+      });
+
+    const loadTurnstile = (overlay: HTMLDivElement) => {
+      // 检查是否已经加载了 Turnstile 脚本
+      if (!document.querySelector('script[src="https://challenges.cloudflare.com/turnstile/v0/api.js"]')) {
+        // 创建并添加脚本
+        const script = document.createElement('script');
+        script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+        script.async = true;
+        script.defer = true;
+        document.body.appendChild(script);
+      }
+
+      // 创建并添加 Turnstile div 元素
+      const turnstileDiv = document.createElement('div');
+      turnstileDiv.className = 'cf-turnstile';
+      turnstileDiv.dataset.sitekey = '0x4AAAAAAAeSlvbblzR86Cud';
+      turnstileDiv.dataset.callback = 'onTurnstileSuccess';
+      overlay.appendChild(turnstileDiv);
+
+      // Turnstile 成功回调函数
+      (window as any).onTurnstileSuccess = () => {
+        document.body.removeChild(overlay);
+      };
     };
 
     // 清理函数，组件卸载时移除遮罩层
     return () => {
       if (document.getElementById('turnstile-overlay')) {
         document.body.removeChild(overlay);
-        document.body.removeChild(turnstileDiv);
       }
     };
   }, []);
