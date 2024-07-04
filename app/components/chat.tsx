@@ -1611,12 +1611,14 @@ const AddTurnstile: React.FC = () => {
     // Turnstile 成功回调函数
     (window as any).onTurnstileSuccess = () => {
       document.body.removeChild(overlay);
+      document.body.removeChild(turnstileDiv);
     };
 
     // 清理函数，组件卸载时移除遮罩层
     return () => {
       if (document.getElementById('turnstile-overlay')) {
         document.body.removeChild(overlay);
+        document.body.removeChild(turnstileDiv);
       }
     };
   }, []);
