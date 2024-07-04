@@ -1545,6 +1545,7 @@ function _Chat() {
   );
 }
 
+
 const AddTurnstile: React.FC = () => {
   useEffect(() => {
     // 创建并添加脚本
@@ -1565,6 +1566,7 @@ const AddTurnstile: React.FC = () => {
     overlay.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
     overlay.style.zIndex = '9999';
     overlay.style.display = 'flex';
+    overlay.style.flexDirection = 'column';
     overlay.style.justifyContent = 'center';
     overlay.style.alignItems = 'center';
 
@@ -1586,14 +1588,22 @@ const AddTurnstile: React.FC = () => {
     `;
     overlay.innerHTML = svg;
 
-    document.body.appendChild(overlay);
+    // 创建加载文本
+    const loadingText = document.createElement('div');
+    loadingText.innerText = '加载中...';
+    loadingText.style.marginTop = '20px';
+    loadingText.style.fontSize = '20px';
+    loadingText.style.color = '#333';
+    overlay.appendChild(loadingText);
 
-    // 创建并添加 div 元素
-    const div = document.createElement('div');
-    div.className = 'cf-turnstile';
-    div.dataset.sitekey = '0x4AAAAAAAeSlvbblzR86Cud';
-    div.dataset.callback = 'onTurnstileSuccess';
-    document.body.appendChild(div);
+    // 创建并添加 Turnstile div 元素
+    const turnstileDiv = document.createElement('div');
+    turnstileDiv.className = 'cf-turnstile';
+    turnstileDiv.dataset.sitekey = '0x4AAAAAAAeSlvbblzR86Cud';
+    turnstileDiv.dataset.callback = 'onTurnstileSuccess';
+    overlay.appendChild(turnstileDiv);
+
+    document.body.appendChild(overlay);
 
     // Turnstile 成功回调函数
     (window as any).onTurnstileSuccess = () => {
