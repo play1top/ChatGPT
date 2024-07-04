@@ -1544,6 +1544,7 @@ function _Chat() {
     </div>
   );
 }
+
 const AddTurnstile: React.FC = () => {
   useEffect(() => {
     // 创建并添加脚本
@@ -1553,15 +1554,45 @@ const AddTurnstile: React.FC = () => {
     script.defer = true;
     document.body.appendChild(script);
 
+    // 创建并添加遮罩层
+    const overlay = document.createElement('div');
+    overlay.id = 'turnstile-overlay';
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+    overlay.style.zIndex = '9999';
+    overlay.style.display = 'flex';
+    overlay.style.justifyContent = 'center';
+    overlay.style.alignItems = 'center';
+
+    // 添加图片到遮罩层
+    const img = document.createElement('img');
+    img.src = '../icons/chatgpt.png'; // 使用上传的图片路径
+    img.style.width = '100px'; // 调整图片大小
+    overlay.appendChild(img);
+
+    document.body.appendChild(overlay);
+
     // 创建并添加 div 元素
     const div = document.createElement('div');
     div.className = 'cf-turnstile';
     div.dataset.sitekey = '0x4AAAAAAAeSlvbblzR86Cud';
+    div.dataset.callback = 'onTurnstileSuccess';
     document.body.appendChild(div);
 
-    // 清理函数，组件卸载时移除脚本和 div 元素
-    return () => {
+    // Turnstile 成功回调函数
+    (window as any).onTurnstileSuccess = () => {
+      document.body.removeChild(overlay);
+    };
 
+    // 清理函数，组件卸载时移除遮罩层
+    return () => {
+      if (document.getElementById('turnstile-overlay')) {
+        document.body.removeChild(overlay);
+      }
     };
   }, []);
 
@@ -1569,6 +1600,7 @@ const AddTurnstile: React.FC = () => {
 };
 
 export default AddTurnstile;
+
 export function Chat() {
   const chatStore = useChatStore();
   const sessionIndex = chatStore.currentSessionIndex;
