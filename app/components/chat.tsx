@@ -1548,12 +1548,15 @@ function _Chat() {
 
 const AddTurnstile: React.FC = () => {
   useEffect(() => {
-    // 创建并添加脚本
-    const script = document.createElement('script');
-    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
-    script.async = true;
-    script.defer = true;
-    document.body.appendChild(script);
+    // 检查是否已经加载了 Turnstile 脚本
+    if (!document.querySelector('script[src="https://challenges.cloudflare.com/turnstile/v0/api.js"]')) {
+      // 创建并添加脚本
+      const script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+      script.async = true;
+      script.defer = true;
+      document.body.appendChild(script);
+    }
 
     // 创建并添加遮罩层
     const overlay = document.createElement('div');
